@@ -37,13 +37,13 @@ class Board
 
   def [](pos)
     y,x = *pos
-    return nil if pos.any? { |el| el<0 }
+    return nil if pos.any? { |el| el<0 || el>7}
     @grid[x][y]
   end
 
   def []=(pos, value)
     y,x = *pos
-    raise "Invalid Position" if pos.any? { |el| el<0 }
+    raise "Invalid Position" if pos.any? { |el| el<0 || el>7}
     @grid[x][y] = value
   end
 

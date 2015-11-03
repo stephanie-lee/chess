@@ -13,13 +13,15 @@ class Display
     @board = board
     @cursor = [0, 0]
     @selected = false
+    @selected_piece = nil
     render
-    get_input
+    #get_input
   end
 
 
   def render
     system("clear")
+    p @selected_piece
     print "  0 1 2 3 4 5 6 7\n"
     @board.grid.each_with_index do |row, y|
       print "#{y}"
@@ -55,6 +57,11 @@ def color_options(x,y)
       bg = :red
     end
   end
+
+  if @selected_piece == [x, y]
+    bg = :green
+  end
+
   { background: bg, color: txt }
 end
 

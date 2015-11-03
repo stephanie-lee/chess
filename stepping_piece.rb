@@ -7,6 +7,7 @@ class SteppingPiece < Piece
     possible_moves = []
     directions.each do |direction|
       new_pos = [direction[0] + current_pos[0], direction[1] + current_pos[1]]
+      p new_pos
       next if blocking_piece?(new_pos)
       possible_moves << new_pos
     end
