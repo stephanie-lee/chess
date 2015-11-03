@@ -99,3 +99,11 @@ end
 b = Board.new
 d = Display.new(b)
 d.render
+b.move([0,0],[1,0])
+d.render
+
+#p b
+piece = b[[0,0]]
+
+#my_blocker = King.new([5,0],b,:white)
+#b[[5,0]] = my_blocker
