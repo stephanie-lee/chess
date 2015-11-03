@@ -113,9 +113,9 @@ b = Board.new
 #b.move([3,0],[6,3])
 d = Display.new(b)
 #
-# black_bishop = b[[7,2]]
+black_pawn = b[[0,6]]
 d.render
-# p black_bishop.moves
+ p black_pawn.moves
 #d.render
 
 #p b
