@@ -47,6 +47,6 @@ class Knight < SteppingPiece
     DIRECTIONS
   end
   def to_s
-    "Kn"
+    "N"
   end
 end
