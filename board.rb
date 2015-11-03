@@ -1,4 +1,6 @@
 load "piece.rb"
+load "sliding_piece.rb"
+load "stepping_piece.rb"
 
 class Board
   attr_accessor :grid
@@ -14,14 +16,14 @@ class Board
   end
 
   def create_board
-    @grid[1].each_index { |i| self[[1,i]] = Pawn.new([1, i], self, :black)} #place pawns
+    #@grid[1].each_index { |i| self[[1,i]] = Pawn.new([1, i], self, :black)} #place pawns
     [[0,0],[0,7]].each { |pos| self[pos] = Rook.new(pos, self, :black)}
     [[0,1],[0,6]].each { |pos| self[pos] = Knight.new(pos, self, :black)}
     [[0,2],[0,5]].each { |pos| self[pos] = Bishop.new(pos, self, :black)}
     [[0,3]].each { |pos| self[pos] = Queen.new(pos, self, :black)}
     [[0,4]].each { |pos| self[pos] = King.new(pos, self, :black)}
 
-    @grid[6].each_index { |i| self[[6,i]] = Pawn.new([6, i], self, :white)} #place pawns
+    #@grid[6].each_index { |i| self[[6,i]] = Pawn.new([6, i], self, :white)} #place pawns
     [[7,0],[7,7]].each { |pos| self[pos] = Rook.new(pos, self, :white)}
     [[7,1],[7,6]].each { |pos| self[pos] = Knight.new(pos, self, :white)}
     [[7,2],[7,5]].each { |pos| self[pos] = Bishop.new(pos, self, :white)}
@@ -31,11 +33,13 @@ class Board
 
   def [](pos)
     x,y = *pos
+    return nil if pos.any? { |el| el<0 }
     @grid[x][y]
   end
 
   def []=(pos, value)
     x,y = *pos
+    raise "Invalid Position" if pos.any? { |el| el<0 }
     @grid[x][y] = value
   end
 
@@ -46,7 +50,7 @@ class Board
 
     self[start] = nil
     self[end_pos] = current_piece
-    current_piece.pos = end_pos
+    current_piece.current_pos = end_pos
   end
 
   def in_bounds?(pos)
