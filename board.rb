@@ -9,26 +9,28 @@ class Board
     @grid = Array.new(8) {Array.new(8)}
 
     create_board
-    # @grid[6].each_index { |i| @grid[6][i] = Piece.new} #place pawns
-    #
-    # @grid[0].each_index { |i| @grid[1][i] = Piece.new} #change!
-    # @grid[7].each_index { |i| @grid[6][i] = Piece.new} #change!
   end
 
   def create_board
-    #@grid[1].each_index { |i| self[[1,i]] = Pawn.new([1, i], self, :black)} #place pawns
-    [[0,0],[0,7]].each { |pos| self[pos] = Rook.new(pos, self, :black)}
-    [[0,1],[0,6]].each { |pos| self[pos] = Knight.new(pos, self, :black)}
-    [[0,2],[0,5]].each { |pos| self[pos] = Bishop.new(pos, self, :black)}
-    [[0,3]].each { |pos| self[pos] = Queen.new(pos, self, :black)}
-    [[0,4]].each { |pos| self[pos] = King.new(pos, self, :black)}
+    add_pawns(:white)
+    add_special_pieces(:white)
 
-    #@grid[6].each_index { |i| self[[6,i]] = Pawn.new([6, i], self, :white)} #place pawns
-    [[7,0],[7,7]].each { |pos| self[pos] = Rook.new(pos, self, :white)}
-    [[7,1],[7,6]].each { |pos| self[pos] = Knight.new(pos, self, :white)}
-    [[7,2],[7,5]].each { |pos| self[pos] = Bishop.new(pos, self, :white)}
-    [[7,3]].each { |pos| self[pos] = Queen.new(pos, self, :white)}
-    [[7,4]].each { |pos| self[pos] = King.new(pos, self, :white)}
+    add_pawns(:black)
+    add_special_pieces(:black)
+  end
+
+  def add_special_pieces(color)
+    color == :black ? x_idx = 7 : x_idx = 0
+    [[x_idx,0],[x_idx,7]].each { |pos| self[pos] = Rook.new(pos, self, color)}
+    [[x_idx,1],[x_idx,6]].each { |pos| self[pos] = Knight.new(pos, self, color)}
+    [[x_idx,2],[x_idx,5]].each { |pos| self[pos] = Bishop.new(pos, self, color)}
+    [[x_idx,3]].each { |pos| self[pos] = Queen.new(pos, self, color)}
+    [[x_idx,4]].each { |pos| self[pos] = King.new(pos, self, color)}
+  end
+
+  def add_pawns(color)
+    color == :black ? x_idx = 6 : x_idx = 1
+    @grid[x_idx].each_index { |i| self[[x_idx,i]] = Pawn.new([x_idx, i], self, color)} #place pawns
   end
 
   def [](pos)

@@ -69,26 +69,27 @@ class Display
 
   def render
     system("clear")
-    print "   0    1    2    3    4    5    6    7\n"
+    print "  0 1 2 3 4 5 6 7\n"
     @board.grid.each_with_index do |row, x|
       print "#{x}"
       row.each_with_index do |item, y|
-        item_str = ""
+        item_str = "   "
         if item.nil?
-          item_str = " [ ] "
+          item_str = "  "#.colorize(color_options(x,y))
         else
-          item_str = " [#{item}] "
+          item_str = " #{item}"#.colorize(color_options(x,y))
         end
-        if @cursor == [x, y]
-          print item_str.red
-        else
-          white = (x + y).even?
-          if white
-            print item_str.blue
-          else
-            print item_str.yellow
-          end
-        end
+        print item_str.colorize(color_options(x,y))
+        # # if @cursor == [x, y]
+        # #   print item_str.red
+        # # else
+        #   white = (x + y).even?
+        #   if white
+        #     print item_str.blue
+        #   else
+        #     print item_str.yellow
+        #   end
+        # end
       end
       print "\n"
     end
@@ -96,14 +97,37 @@ class Display
 end
 
 
+def color_options(x,y)
+  txt = :black
+  current_piece = @board[[x,y]]
+  if current_piece && current_piece.color == :white
+    txt = :red
+  end
+
+  if @cursor == [x, y]
+     bg = :blue
+  else
+    white = (x + y).even?
+    if white
+      bg = :white
+    else
+      bg = :gray
+    end
+  end
+  { background: bg, color: txt }
+end
+
+"asdfsf".colorize({ background: :red, color: :white })
+
 b = Board.new
 d = Display.new(b)
-d.render
-b.move([0,0],[1,0])
+# d.render
+# b.move([1,0],[3,0])
 d.render
 
 #p b
-piece = b[[0,0]]
+# piece = b[[0,0]]
+
 
 #my_blocker = King.new([5,0],b,:white)
 #b[[5,0]] = my_blocker
