@@ -5,14 +5,14 @@ load "stepping_piece.rb"
 class Board
   attr_accessor :grid
 
-  def initialize
+  def initialize(populate = true)
     @grid = Array.new(8) {Array.new(8)}
 
-    create_board
+    create_board if populate
   end
 
   def create_board
-    add_pawns(:white)
+    # add_pawns(:white)
     add_special_pieces(:white)
 
     add_pawns(:black)

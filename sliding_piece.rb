@@ -13,7 +13,7 @@ class SlidingPiece < Piece
         break unless @board.in_bounds?(new_pos)
         if blocking_piece?(new_pos) #if hit own color
           break
-        elsif @board[new_pos] #if hit enemy
+        elsif enemy_piece?(new_pos) #if hit enemy
           possible_moves << new_pos
           break
         else

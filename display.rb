@@ -1,74 +1,25 @@
 require 'colorize'
-# require_relative 'board.rb'
+
+require_relative 'cursorable.rb'
 load 'board.rb'
 load 'piece.rb'
 
 class Display
+  include Cursorable
   attr_accessor :cursor
 
-  KEYMAP = {
-    "\e[A" => :up,
-    "\e[B" => :down,
-    "\e[C" => :right,
-    "\e[D" => :left,
-    "\r"   => :return
-  }
-  MOVES = {
-   left: [0, -1],
-   right: [0, 1],
-   up: [-1, 0],
-   down: [1, 0]
- }
-
-  def read_char
-    STDIN.echo = false
-    STDIN.raw!
-
-    input = STDIN.getc.chr
-    if input == "\e" then
-      input << STDIN.read_nonblock(3) rescue nil
-      input << STDIN.read_nonblock(2) rescue nil
-    end
-    ensure
-      STDIN.echo = true
-      STDIN.cooked!
-
-      return input
-  end
-
- def get_input
-    key = KEYMAP[read_char]
-    handle_key(key)
-  end
-
-  def handle_key(key)
-    case key
-    when :left, :right, :up, :down
-      update_pos(MOVES[key])
-      nil
-    when :return
-      @selected = @selected ? false : true
-    end
-  end
-
-  def update_pos(diff)
-    new_pos = [@cursor[0] + diff[0], @cursor[1] + diff[1]]
-    @cursor = new_pos if @board.in_bounds?(new_pos)
-    render
-  end
 
   def initialize(board)
     @board = board
     @cursor = [0, 0]
     @selected = false
-    #get_input
-
+    render
+    get_input
   end
 
 
-
   def render
-    #system("clear")
+    system("clear")
     print "  0 1 2 3 4 5 6 7\n"
     @board.grid.each_with_index do |row, y|
       print "#{y}"
@@ -109,18 +60,19 @@ end
 
 
 b = Board.new
-# #b.move([0,7],[4,7])
-#b.move([3,0],[6,3])
+# b.move([3,0],[3,6])
+# b.move([3,6],[3,5])
+# #b.move([3,0],[6,3])
 d = Display.new(b)
 #
-black_pawn = b[[0,6]]
+# black_pawn = b[[2,6]]
 d.render
- p black_pawn.moves
-#d.render
-
-#p b
-# piece = b[[0,0]]
-
-
-#my_blocker = King.new([5,0],b,:white)
-#b[[5,0]] = my_blocker
+#  p black_pawn.moves
+# #d.render
+#
+# #p b
+# # piece = b[[0,0]]
+#
+#
+# #my_blocker = King.new([5,0],b,:white)
+# #b[[5,0]] = my_blocker
