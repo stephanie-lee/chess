@@ -1,17 +1,16 @@
 require_relative "Piece.rb"
 
 class SteppingPiece < Piece
-  def pos_move?(new_pos)
-  end
 
   def moves
     directions = get_directions
-    possible_moves = directions.map do |direction|
-      [direction[0] + current_pos[0],
-      direction[1] + current_pos[1]]
+    possible_moves = []
+    directions.each do |direction|
+      new_pos = [direction[0] + current_pos[0], direction[1] + current_pos[1]]
+      next if blocking_piece?(new_pos)
+      possible_moves << new_pos
     end
-    all_available_spaces = @board.all_empty_enemy_spaces(@color)
-    all_available_spaces & possible_moves
+    possible_moves
   end
 
 end

@@ -68,28 +68,18 @@ class Display
 
 
   def render
-    system("clear")
+    #system("clear")
     print "  0 1 2 3 4 5 6 7\n"
-    @board.grid.each_with_index do |row, x|
-      print "#{x}"
-      row.each_with_index do |item, y|
+    @board.grid.each_with_index do |row, y|
+      print "#{y}"
+      row.each_with_index do |item, x|
         item_str = "   "
         if item.nil?
-          item_str = "  "#.colorize(color_options(x,y))
+          item_str = "  "
         else
-          item_str = " #{item}"#.colorize(color_options(x,y))
+          item_str = " #{item}"
         end
         print item_str.colorize(color_options(x,y))
-        # # if @cursor == [x, y]
-        # #   print item_str.red
-        # # else
-        #   white = (x + y).even?
-        #   if white
-        #     print item_str.blue
-        #   else
-        #     print item_str.yellow
-        #   end
-        # end
       end
       print "\n"
     end
@@ -101,29 +91,32 @@ def color_options(x,y)
   txt = :black
   current_piece = @board[[x,y]]
   if current_piece && current_piece.color == :white
-    txt = :red
+    txt = :white
   end
 
   if @cursor == [x, y]
-     bg = :blue
+     bg = :yellow
   else
-    white = (x + y).even?
-    if white
-      bg = :white
+    white_tile = (x + y).even?
+    if white_tile
+      bg = :blue
     else
-      bg = :gray
+      bg = :red
     end
   end
   { background: bg, color: txt }
 end
 
-"asdfsf".colorize({ background: :red, color: :white })
 
 b = Board.new
+# #b.move([0,7],[4,7])
+#b.move([3,0],[6,3])
 d = Display.new(b)
-# d.render
-# b.move([1,0],[3,0])
+#
+# black_bishop = b[[7,2]]
 d.render
+# p black_bishop.moves
+#d.render
 
 #p b
 # piece = b[[0,0]]

@@ -20,33 +20,36 @@ class Board
   end
 
   def add_special_pieces(color)
-    color == :black ? x_idx = 7 : x_idx = 0
-    [[x_idx,0],[x_idx,7]].each { |pos| self[pos] = Rook.new(pos, self, color)}
-    [[x_idx,1],[x_idx,6]].each { |pos| self[pos] = Knight.new(pos, self, color)}
-    [[x_idx,2],[x_idx,5]].each { |pos| self[pos] = Bishop.new(pos, self, color)}
-    [[x_idx,3]].each { |pos| self[pos] = Queen.new(pos, self, color)}
-    [[x_idx,4]].each { |pos| self[pos] = King.new(pos, self, color)}
+    p color
+    color == :black ? y_idx = 7 : y_idx = 0
+    p color
+    [[0,y_idx],[7,y_idx]].each { |pos| self[pos] = Rook.new(pos, self, color)}
+    [[1,y_idx],[6,y_idx]].each { |pos| self[pos] = Knight.new(pos, self, color)}
+    [[2,y_idx],[5,y_idx]].each { |pos| self[pos] = Bishop.new(pos, self, color)}
+    [[3,y_idx]].each { |pos| self[pos] = Queen.new(pos, self, color)}
+    [[4,y_idx]].each { |pos| self[pos] = King.new(pos, self, color)}
   end
 
   def add_pawns(color)
-    color == :black ? x_idx = 6 : x_idx = 1
-    @grid[x_idx].each_index { |i| self[[x_idx,i]] = Pawn.new([x_idx, i], self, color)} #place pawns
+    color == :black ? y_idx = 6 : y_idx = 1
+    @grid[y_idx].each_index { |i| self[[i, y_idx]] = Pawn.new([i, y_idx], self, color)} #place pawns
   end
 
   def [](pos)
-    x,y = *pos
+    y,x = *pos
     return nil if pos.any? { |el| el<0 }
     @grid[x][y]
   end
 
   def []=(pos, value)
-    x,y = *pos
+    y,x = *pos
     raise "Invalid Position" if pos.any? { |el| el<0 }
     @grid[x][y] = value
   end
 
   def move(start, end_pos)
     current_piece = self[start]
+    raise "Off board" if !in_bounds?(end_pos)
     raise "No piece at #{start}" if current_piece.nil?
     raise "Piece cannot move to #{end_pos}" unless current_piece.pos_move?(end_pos)
 
@@ -66,7 +69,6 @@ class Board
         if item.nil?
           all_empty_or_enemy_spaces << [x, y]
         else
-          p item.color
           all_empty_or_enemy_spaces << item.current_pos if item.color != color
         end
       end

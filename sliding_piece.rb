@@ -10,17 +10,16 @@ class SlidingPiece < Piece
 
       while @board.in_bounds?(new_pos)
         new_pos = [direction[0] + new_pos[0], direction[1] + new_pos[1]]
-        blocking_piece = @board[new_pos]
-        p "new_pos #{new_pos}, blocking_piece #{blocking_piece}"
-        if blocking_piece.nil?
-          break unless @board.in_bounds?(new_pos)
+        break unless @board.in_bounds?(new_pos)
+        if blocking_piece?(new_pos) #if hit own color
+          break
+        elsif @board[new_pos] #if hit enemy
           possible_moves << new_pos
-        elsif blocking_piece.color == self.color
           break
         else
           possible_moves << new_pos
-          break
         end
+
 
       end
 
