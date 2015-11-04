@@ -1,6 +1,7 @@
 require_relative "piece.rb"
 require_relative "sliding_piece.rb"
 require_relative "stepping_piece.rb"
+require_relative "display.rb"
 
 class Board
   attr_accessor :grid
@@ -57,7 +58,7 @@ class Board
     raise ChessMoveError, "Off board" if !in_bounds?(end_pos)
     raise ChessMoveError, "No piece at #{start}" if self[start].nil?
     raise ChessMoveError, "Piece cannot move to #{end_pos}" unless self[start].pos_move?(end_pos)
-    raise ChessMoveError, "That move puts you in check." if in_check?(start, end_pos)
+    raise ChessMoveError, "That move puts you in check." if put_self_in_check?(start, end_pos)
   end
 
   def position_change(start, end_pos)
@@ -86,23 +87,54 @@ class Board
 
   def move!(start, end_pos)
     board_dup = self.dup
-    board_dup.position_change(start, end_pos)
+    board_dup.position_change(start, end_pos) if board_dup.in_bounds?(end_pos)
     board_dup
   end
 
-  def in_check?(start, end_pos)
+  def put_self_in_check?(start, end_pos)
     board_dup = self.move!(start, end_pos)
     our_color = self[start].color
-    our_king = find_king(board_dup, our_color)
-    return true if checking_piece?(board_dup, our_king)
+    our_king_pos = find_king(board_dup, our_color)
+    return true if checking_piece?(board_dup, our_king_pos)
     false
   end
 
-  def checking_piece?(board, our_king)
-    our_color = board[our_king].color
+  def in_check?(our_color)
+    our_king_pos = find_king(self, our_color)
+    enemy_color = (our_color == :black ? :white : :black)
+    king_killer_piece = find_piece{ |piece| piece.color == enemy_color && piece.moves.include?(our_king_pos)}
+    return true if king_killer_piece
+    false
+  end
+
+  def checkmate?(our_color)
+    self.grid.flatten.each do |piece|
+      if piece
+        next if piece.color != our_color
+        moves = piece.moves
+        moves.each do |pos|
+          dup_board = move!(piece.current_pos, pos)
+          return false unless dup_board.in_check?(our_color)
+        end
+      end
+    end
+    true
+  end
+
+  def find_piece(&blk)
+    self.grid.flatten.each do |piece|
+      if piece
+        return piece if blk.call(piece)
+      end
+    end
+    nil
+  end
+
+  def checking_piece?(board, our_king_pos)
+    our_color = board[our_king_pos].color
     board.grid.flatten.each do |piece|
       if piece
-        if piece.color != our_color && piece.moves.include?(our_king)
+        if piece.color != our_color && piece.moves.include?(our_king_pos)
           return piece
         end
       end
@@ -111,7 +143,6 @@ class Board
   end
 
   def find_king(board, our_color)
-    our_king = nil
     board.grid.flatten.each do |piece|
       if piece
         if piece.class == King && piece.color == our_color

@@ -20,18 +20,18 @@ class Display
 
 
   def render
-    system("clear")
+    #system("clear")
     print "  0 1 2 3 4 5 6 7\n"
     @board.grid.each_with_index do |row, y|
       print "#{y}"
       row.each_with_index do |item, x|
-        item_str = "   "
+        print_str = "   "
         if item.nil?
-          item_str = "  "
+          print_str = "  "
         else
-          item_str = " #{item}"
+          print_str = " #{item}"
         end
-        print item_str.colorize(color_options(x,y))
+        print print_str.colorize(color_options(x,y))
       end
       print "\n"
     end
