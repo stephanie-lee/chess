@@ -1,8 +1,8 @@
 require 'colorize'
 
 require_relative 'cursorable.rb'
-load 'board.rb'
-load 'piece.rb'
+require_relative 'board.rb'
+require_relative 'piece.rb'
 
 class Display
   include Cursorable
@@ -21,7 +21,6 @@ class Display
 
   def render
     system("clear")
-    p @selected_piece
     print "  0 1 2 3 4 5 6 7\n"
     @board.grid.each_with_index do |row, y|
       print "#{y}"
@@ -74,7 +73,7 @@ d = Display.new(b)
 #
 # black_pawn = b[[2,6]]
 d.render
-#  p black_pawn.moves
+#  black_pawn.moves
 # #d.render
 #
 # #p b

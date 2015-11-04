@@ -4,7 +4,6 @@ class SlidingPiece < Piece
   def moves
     directions = get_directions
     possible_moves = []
-    all_available_spaces = @board.all_empty_enemy_spaces(@color)
     directions.each do |direction|
       new_pos = @current_pos
 

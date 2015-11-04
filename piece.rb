@@ -28,6 +28,9 @@ class Piece
     end
     false
   end
+  def inspect
+    self.class
+  end
 end
 
 
@@ -61,9 +64,7 @@ class Pawn < Piece
     forward_directions.each do |f_dir|
       new_pos = [f_dir[0] + @current_pos[0],
                  f_dir[1] + @current_pos[1]]
-      p "pre-break, new_pos#{new_pos}"
       break if blocking_piece?(new_pos)
-      p "after blocking piece checker"
       possible_moves << new_pos
       break unless @first_move
     end
